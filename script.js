@@ -1,10 +1,20 @@
 const media = document.querySelector('.paper-media');
 const video = media.querySelector('video');
+const canvas = media.querySelector('canvas');
+const context = canvas.getContext('2d');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let frameId;
+
+function drawFrame() {
+  if (video.paused) return;
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  frameId = requestAnimationFrame(drawFrame);
+}
 
 function playVideo() {
   video.play().then(() => {
     if (video.paused) return;
+    drawFrame();
     media.classList.add('is-playing');
     media.setAttribute('aria-pressed', 'true');
   }).catch(() => {});
@@ -12,6 +22,7 @@ function playVideo() {
 
 function stopVideo() {
   video.pause();
+  cancelAnimationFrame(frameId);
   video.currentTime = 0;
   media.classList.remove('is-playing');
   media.setAttribute('aria-pressed', 'false');
