@@ -76,7 +76,7 @@ nav a:hover{color:var(--accent)}
 .honor-list li{padding:12px 0;border-top:1px solid var(--line);color:var(--muted);font-size:16px}
 .honor-list li span{font-weight:700;color:var(--ink)}
 .rank-badge{display:inline-block;padding:1px 7px;border-radius:4px;background:var(--soft);color:var(--accent);font-size:14px;white-space:nowrap}
-.visitor-map{max-width:640px;margin:0 auto;min-height:320px}
+.visitor-map{width:100%;min-height:320px}
 footer{font-size:14px;color:#a09bac}
 @media(max-width:1020px){.page-grid,.header-inner{gap:38px;grid-template-columns:245px minmax(0,1fr)}.profile h1{font-size:34px}.paper-card{grid-template-columns:1fr;gap:0}.paper-copy{justify-content:center;padding:22px 4px 4px}nav{gap:16px}}
 @media(max-width:680px){.site-header{height:auto;min-height:64px}.header-inner{display:flex;min-height:64px;flex-wrap:wrap;padding:16px 20px;gap:14px}.wordmark{margin:auto}nav{width:100%;justify-content:space-between;gap:10px;font-size:15px}.page-grid{display:block;padding:30px 20px 60px}.profile{position:static;max-width:310px;margin:0 auto 46px}.section{scroll-margin-top:115px}.timeline-item{grid-template-columns:1fr;gap:2px}.paper-card{padding:14px}.paper-copy{padding:18px 0 0}.paper-copy h3{font-size:27px}.section h2{font-size:36px}}
