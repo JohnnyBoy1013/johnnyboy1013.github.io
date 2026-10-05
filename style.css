@@ -77,11 +77,18 @@ nav a:hover{color:var(--accent)}
 .honor-list li span{font-weight:700;color:var(--ink)}
 .rank-badge{display:inline-block;padding:1px 7px;border-radius:4px;background:var(--soft);color:var(--accent);font-size:14px;white-space:nowrap}
 .visitor-map{width:100%;min-height:320px}
-.visitors-section summary{display:flex;align-items:center;cursor:pointer;list-style:none}
+.section.visitors-section:last-of-type{padding-bottom:0;margin-bottom:22px;border:0}
+.visitors-section summary{display:flex;align-items:center;gap:8px;width:max-content;margin-left:auto;padding:8px 12px;border-radius:999px;background:var(--soft);color:var(--accent);cursor:pointer;list-style:none}
+.visitors-section summary::marker{content:""}
 .visitors-section summary::-webkit-details-marker{display:none}
-.visitors-section summary h2{flex:1}
-.visitors-section summary::after{content:"⌄";color:var(--accent);font-size:28px;transform:translateY(-6px);transition:transform .2s ease}
-.visitors-section details[open] summary::after{transform:translateY(-6px) rotate(180deg)}
+.visitors-section summary .section-icon{width:17px;height:17px}
+.visitor-body{margin-top:22px}
+.visitor-toggle{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;white-space:nowrap}
+.visitor-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s ease}
+.visitor-toggle .when-open{display:none}
+.visitors-section details[open] .when-closed{display:none}
+.visitors-section details[open] .when-open{display:inline}
+.visitors-section details[open] .visitor-toggle svg{transform:rotate(180deg)}
 footer{font-size:14px;color:#a09bac}
 @media(max-width:1020px){.page-grid,.header-inner{gap:38px;grid-template-columns:245px minmax(0,1fr)}.profile h1{font-size:34px}.paper-card{grid-template-columns:1fr;gap:0}.paper-copy{justify-content:center;padding:22px 4px 4px}nav{gap:16px}}
 @media(max-width:680px){.site-header{height:auto;min-height:64px}.header-inner{display:flex;min-height:64px;flex-wrap:wrap;padding:16px 20px;gap:14px}.wordmark{margin:auto}nav{width:100%;justify-content:space-between;gap:10px;font-size:15px}.page-grid{display:block;padding:30px 20px 60px}.profile{position:static;max-width:310px;margin:0 auto 46px}.section{scroll-margin-top:115px}.timeline-item{grid-template-columns:1fr;gap:2px}.paper-card{padding:14px}.paper-copy{padding:18px 0 0}.paper-copy h3{font-size:27px}.section h2{font-size:36px}}
