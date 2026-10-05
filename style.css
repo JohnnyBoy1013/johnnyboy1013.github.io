@@ -82,8 +82,7 @@ nav a:hover{color:var(--accent)}
 .visitors-section summary::marker{content:""}
 .visitors-section summary::-webkit-details-marker{display:none}
 .visitors-section summary .section-icon{width:17px;height:17px}
-.visitor-body{margin-top:22px;text-align:center}
-.visitor-body h2{justify-content:center}
+.visitor-body{margin-top:22px}
 .visitor-toggle{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;white-space:nowrap}
 .visitor-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s ease}
 .visitor-toggle .when-open{display:none}
