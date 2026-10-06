@@ -60,9 +60,7 @@ nav a:hover{color:var(--accent)}
 .paper-media.is-playing canvas{visibility:visible}
 .paper-media.is-playing::after{opacity:0}
 .paper-copy{display:flex;flex-direction:column;justify-content:center;padding:8px 10px 8px 0}
-.paper-meta{display:flex;align-items:center;gap:11px;color:#858096;font-size:15px}
-.paper-tag{border-radius:4px;background:var(--soft);color:var(--accent);padding:3px 8px;font-weight:700;letter-spacing:.02em}
-.paper-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;color:var(--accent);font-size:14px;font-weight:700}
+.paper-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
 .paper-links>a,.paper-link-pending{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:5px 10px;border:1px solid #e3ddec;border-radius:8px;background:#faf8fe;white-space:nowrap;line-height:1.2}
 .paper-links>a:hover{border-color:#b7a9dc;background:var(--soft);color:#554391}
 .paper-links svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
