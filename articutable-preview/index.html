@@ -7,9 +7,9 @@
   <meta name="description" content="ArticuTable reconstructs interactive, simulation-ready rigid-articulated 3D tabletop scenes from a single image.">
   <title>ArticuTable: Interactive Rigid-Articulated 3D Tabletop Scenes from a Single Image</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=20261006">
+  <link rel="stylesheet" href="style.css?v=20261007">
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
-  <script type="module" src="demo.js"></script>
+  <script type="module" src="demo.js?v=20261007"></script>
 </head>
 <body>
   <main>
@@ -41,7 +41,7 @@
       <div class="demo-stage" id="demo-stage">
         <div class="demo-poster" id="demo-poster">
           <img src="assets/simulation-preview.png" alt="ArticuTable scene rendered in Isaac Sim">
-          <div class="demo-poster-content"><span>INTERACTIVE 3D DEMO</span><button id="load-demo" type="button">Explore in 3D <span aria-hidden="true">↗</span></button><small>High-detail model loads when you click</small></div>
+          <div class="demo-poster-content"><span>INTERACTIVE 3D SCENE</span><button id="load-demo" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5v10l-9-5V7Zm18 0-9 5v10l9-5V7Z"/></svg>Explore in 3D</button></div>
         </div>
         <div class="demo-viewport" id="demo-viewport" aria-label="Interactive 3D tabletop scene" hidden></div>
         <div class="demo-hint" id="demo-hint" hidden>Drag to rotate <span>·</span> Scroll or pinch to zoom</div>

@@ -26,6 +26,7 @@ const objectButtons = [...document.querySelectorAll('.demo-tabs button')];
 
 loadButton.addEventListener('click', async () => {
   loadButton.disabled = true;
+  poster.classList.add('is-loading');
   status.hidden = false;
   status.textContent = 'Loading the 3D scene…';
   let renderer;
@@ -311,6 +312,7 @@ loadButton.addEventListener('click', async () => {
   } catch (error) {
     console.error('3D demo failed to load', error);
     renderer?.dispose();
+    poster.classList.remove('is-loading');
     status.textContent = 'The 3D scene could not load. Please try again or watch the videos below.';
     loadButton.disabled = false;
   }
