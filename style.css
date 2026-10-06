@@ -62,6 +62,8 @@ nav a:hover{color:var(--accent)}
 .paper-copy{display:flex;flex-direction:column;justify-content:center;padding:8px 10px 8px 0}
 .paper-meta{display:flex;align-items:center;gap:11px;color:#858096;font-size:15px}
 .paper-tag{border-radius:4px;background:var(--soft);color:var(--accent);padding:3px 8px;font-weight:700;letter-spacing:.02em}
+.paper-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;color:var(--accent);font-size:15px;font-weight:700}
+.paper-links a:hover{text-decoration:underline}
 .paper-copy h3{font:700 28px/1.15 "Crimson Text",Georgia,serif;letter-spacing:-.01em;margin:0 0 8px}
 .authors{font-size:15px;color:#837e92;margin-bottom:10px!important}
 .authors strong{color:var(--accent)}
