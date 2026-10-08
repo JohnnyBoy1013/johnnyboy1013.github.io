@@ -60,7 +60,7 @@ nav a:hover{color:var(--accent)}
 .paper-media.is-playing canvas{visibility:visible}
 .paper-media.is-playing::after{opacity:0}
 .paper-copy{padding:0}
-.paper-links{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
+.paper-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
 .paper-links>a,.paper-link-pending{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:5px 8px;border:1px solid #e3ddec;border-radius:8px;background:#faf8fe;white-space:nowrap;line-height:1.2}
 .paper-links>a:hover{border-color:#b7a9dc;background:var(--soft);color:#554391}
 .paper-links svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -98,6 +98,7 @@ nav a:hover{color:var(--accent)}
 footer{text-align:center;font-size:14px;color:#a09bac}
 @media(max-width:1120px){.paper-card{grid-template-columns:1fr;gap:0}.paper-copy{padding:22px 4px 4px}}
 @media(max-width:1020px){.page-grid,.header-inner{gap:38px;grid-template-columns:245px minmax(0,1fr)}.profile h1{font-size:34px}nav{gap:16px}}
+@media(max-width:900px){.paper-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.site-header{height:auto;min-height:64px}.header-inner{display:flex;min-height:64px;flex-wrap:wrap;padding:16px 20px;gap:14px}.wordmark{margin:auto}nav{width:100%;justify-content:space-between;gap:10px;font-size:15px}.page-grid{display:block;padding:30px 20px 60px}.profile{position:static;max-width:310px;margin:0 auto 46px}.section{scroll-margin-top:115px}.timeline-item{grid-template-columns:1fr;gap:2px}.paper-card{padding:14px}.paper-copy{padding:18px 0 0}.paper-copy h3{font-size:27px}.section h2{font-size:36px}}
 @media(max-width:380px){nav{gap:5px;font-size:14px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.paper-media,.paper-media::after{transition:none}}
