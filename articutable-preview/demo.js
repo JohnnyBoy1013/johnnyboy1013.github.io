@@ -24,6 +24,74 @@ const motionButton = document.querySelector('#motion-button');
 const jointControls = document.querySelector('#joint-controls');
 const objectButtons = [...document.querySelectorAll('.demo-tabs button')];
 
+let modelData;
+function fetchModel() {
+  if (modelData) return modelData;
+  modelData = new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open('GET', 'assets/demo-scene.glb');
+    request.responseType = 'arraybuffer';
+    request.onprogress = (event) => {
+      if (!status.hidden && event.lengthComputable) status.textContent = `Loading the 3D scene… ${Math.round(event.loaded / event.total * 100)}%`;
+    };
+    request.onload = () => request.status === 200 ? resolve(request.response) : reject(new Error(`3D model HTTP ${request.status}`));
+    request.onerror = () => reject(new Error('3D model download failed'));
+    request.send();
+  }).catch((error) => {
+    modelData = null;
+    throw error;
+  });
+  return modelData;
+}
+
+let modules;
+function loadModules() {
+  if (modules) return modules;
+  modules = Promise.all([
+    import('three'),
+    import('three/addons/loaders/GLTFLoader.js'),
+    import('three/addons/loaders/DRACOLoader.js'),
+    import('three/addons/controls/OrbitControls.js'),
+    import('three/addons/environments/RoomEnvironment.js'),
+  ]).catch((error) => {
+    modules = null;
+    throw error;
+  });
+  return modules;
+}
+
+let preparedDemo;
+function prepareDemo() {
+  if (preparedDemo) return preparedDemo;
+  preparedDemo = (async () => {
+    const [[THREE, { GLTFLoader }, { DRACOLoader }, { OrbitControls }, { RoomEnvironment }], data] = await Promise.all([loadModules(), fetchModel()]);
+    status.textContent = 'Preparing the 3D scene…';
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/libs/draco/');
+    try {
+      const gltf = await new Promise((resolve, reject) => {
+        new GLTFLoader().setDRACOLoader(draco).parse(data, 'assets/', resolve, reject);
+      });
+      modelData = null;
+      return { THREE, OrbitControls, RoomEnvironment, gltf };
+    } finally {
+      draco.dispose();
+    }
+  })().catch((error) => {
+    preparedDemo = null;
+    throw error;
+  });
+  return preparedDemo;
+}
+
+const previewObserver = new IntersectionObserver((entries) => {
+  if (!entries.some((entry) => entry.isIntersecting)) return;
+  fetchModel().catch(() => {});
+  loadModules().catch(() => {});
+  previewObserver.disconnect();
+}, { rootMargin: '250px' });
+previewObserver.observe(document.querySelector('#demo'));
+
 loadButton.addEventListener('click', async () => {
   loadButton.disabled = true;
   poster.classList.add('is-loading');
@@ -32,13 +100,8 @@ loadButton.addEventListener('click', async () => {
   let renderer;
 
   try {
-    const [THREE, { GLTFLoader }, { DRACOLoader }, { OrbitControls }, { RoomEnvironment }] = await Promise.all([
-      import('three'),
-      import('three/addons/loaders/GLTFLoader.js'),
-      import('three/addons/loaders/DRACOLoader.js'),
-      import('three/addons/controls/OrbitControls.js'),
-      import('three/addons/environments/RoomEnvironment.js'),
-    ]);
+    const { THREE, OrbitControls, RoomEnvironment, gltf } = await prepareDemo();
+    status.textContent = 'Starting the 3D view…';
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#d9d9d9');
@@ -74,14 +137,6 @@ loadButton.addEventListener('click', async () => {
     key.shadow.normalBias = 0.002;
     scene.add(key);
 
-    const draco = new DRACOLoader();
-    draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/libs/draco/');
-    const gltf = await new Promise((resolve, reject) => {
-      new GLTFLoader().setDRACOLoader(draco).load('assets/demo-scene.glb', resolve, (event) => {
-        if (event.total) status.textContent = `Loading the 3D scene… ${Math.round(event.loaded / event.total * 100)}%`;
-      }, reject);
-    });
-    draco.dispose();
     const model = gltf.scene;
     scene.add(model);
     // The GLB already carries the simulator's PBR factors; keep them intact.
