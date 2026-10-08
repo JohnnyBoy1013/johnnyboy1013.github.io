@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f6fc">
+  <meta name="description" content="ArticuTable reconstructs interactive, simulation-ready rigid-articulated 3D tabletop scenes from a single image.">
+  <title>ArticuTable: Interactive Rigid-Articulated 3D Tabletop Scenes from a Single Image</title>
+  <link rel="icon" href="assets/favicon-diorama.png" type="image/png">
+  <link rel="stylesheet" href="style.css?v=20261008">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+  <script type="module" src="demo.js?v=20261008"></script>
+</head>
+<body>
+  <main>
+    <header class="paper-header content" id="top">
+      <h1><span>ArticuTable:</span> Generating Instance-Level Interactive Rigid-Articulated 3D Tabletop Scenes from a Single Image</h1>
+      <div class="authors" aria-label="Authors">
+        <a href="https://johnnyboy1013.github.io/" target="_blank" rel="noopener noreferrer">Kai Lv<sup>*,1</sup></a>
+        <a href="https://bryceyin13.github.io/" target="_blank" rel="noopener noreferrer">Yibo Yin<sup>*,2</sup></a><a href="https://shawnricardo.github.io/" target="_blank" rel="noopener noreferrer">Lijun Guo<sup>1</sup></a><a href="https://hengfan2010.github.io/" target="_blank" rel="noopener noreferrer">Heng Fan<sup>3</sup></a><a href="https://zhangkaihao.github.io/" target="_blank" rel="noopener noreferrer">Kaihao Zhang<sup>4</sup></a><a href="https://xingpingdong.github.io/" target="_blank" rel="noopener noreferrer">Xingping Dong<sup>†,1</sup></a>
+      </div>
+      <div class="affiliations"><span><sup>1</sup> Wuhan University</span><span><sup>2</sup> EPFL</span><span><sup>3</sup> University of North Texas</span><span><sup>4</sup> Australian National University</span></div>
+      <p class="author-note">* Equal contribution &nbsp; · &nbsp; † Corresponding author</p>
+      <p class="publication">arXiv:2610.05249 · 2026</p>
+      <nav class="resource-links" aria-label="Project resources">
+        <a href="https://arxiv.org/abs/2610.05249" target="_blank" rel="noopener noreferrer"><img src="assets/arxiv-icon.svg" alt="" aria-hidden="true">Paper</a>
+        <a href="https://github.com/bryceyin13/articutable-code" target="_blank" rel="noopener noreferrer"><img src="assets/github-icon.svg" alt="" aria-hidden="true">Code</a>
+        <a href="https://drive.google.com/file/d/1udTcI9ESuk-TbKOYjIQ4ti8t4CMoGW4b/view?usp=sharing" target="_blank" rel="noopener noreferrer"><img src="assets/google-drive-icon.png" alt="" aria-hidden="true">Dataset</a>
+        <a href="#demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5v10l-9-5V7Zm18 0-9 5v10l9-5V7Z"/></svg>3D Demo</a>
+        <a href="#videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 8 6 4-6 4V8Z"/></svg>Videos</a>
+      </nav>
+    </header>
+
+    <figure class="teaser wide">
+      <video controls playsinline preload="none" poster="assets/joint_cycle-poster.webp" aria-label="ArticuTable featured joint-motion video"><source src="assets/joint_cycle.mp4" type="video/mp4">Your browser does not support embedded video.</video>
+      <figcaption><strong>Teaser video.</strong> A reconstructed tabletop scene with executable part-level motion.</figcaption>
+    </figure>
+
+    <section class="wide section demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="demo-intro"><span class="eyebrow">EXPLORE THE RECONSTRUCTION</span><h2 id="demo-title">One image. An interactive world.</h2><p>Rotate the tabletop, inspect each object, and control its recovered joints.</p></div>
+      <div class="demo-stage" id="demo-stage">
+        <div class="demo-poster" id="demo-poster">
+          <img src="assets/simulation-preview.png" alt="ArticuTable scene rendered in Isaac Sim">
+          <div class="demo-poster-content"><button id="load-demo" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5v10l-9-5V7Zm18 0-9 5v10l9-5V7Z"/></svg>Explore in 3D</button></div>
+        </div>
+        <div class="demo-viewport" id="demo-viewport" aria-label="Interactive 3D tabletop scene" hidden></div>
+        <div class="demo-hint" id="demo-hint" hidden>Drag to rotate <span>·</span> Scroll or pinch to zoom</div>
+        <p class="demo-status" id="demo-status" role="status" hidden></p>
+      </div>
+      <div class="demo-toolbar" id="demo-toolbar" hidden>
+        <div class="demo-tabs" role="group" aria-label="Choose an articulated object">
+          <button type="button" data-object="all" aria-pressed="true">Full scene</button>
+          <button type="button" data-object="adjustable_desk_lamp_0" aria-pressed="false">Desk lamp</button>
+          <button type="button" data-object="laptop_computer_0" aria-pressed="false">Laptop</button>
+          <button type="button" data-object="storage_drawer_box_0" aria-pressed="false">Drawer</button>
+          <button type="button" data-object="scissors_0" aria-pressed="false">Scissors</button>
+          <button type="button" data-object="water_bottle_0" aria-pressed="false">Bottle</button>
+        </div>
+        <button type="button" class="motion-button" id="motion-button" aria-pressed="false">▶ Play motion</button>
+      </div>
+      <div class="joint-controls" id="joint-controls" hidden></div>
+      <p class="demo-note">Click an object or choose it above, then drag its joint controls. Play follows the Isaac Sim video's joint trajectory. The poster and videos show the original simulator rendering; this WebGL view uses different lighting.</p>
+    </section>
+
+    <section class="content section" id="abstract">
+      <h2>Abstract</h2>
+      <p>Embodied agents benefit from 3D environments that combine visual fidelity to real-world observations with physical interactivity. Existing single-image tabletop reconstruction methods recover plausible scene geometry but typically represent objects as monolithic rigid bodies, limiting interaction to whole-object rigid motion and precluding executable part-level articulation. Meanwhile, recovering a scene layout consistent with the input view remains challenging because a single observation may admit multiple plausible pose-scale configurations.</p>
+      <p>We present <strong>ArticuTable</strong>, a single-image 3D tabletop reconstruction framework that recovers both executable part-level articulation and an input-view-consistent scene layout. For object modeling, generation-robust articulation modeling (GRAM) combines joint fitting guided by a multimodal large language model with semantic state reasoning to recover reliable joint parameters and valid motion ranges from imperfect proxy meshes. For scene layout, progressive semantic-geometric scene registration (PSGSR) progressively narrows the pose-scale search space using complementary metric, planar, and input-view constraints. We also contribute <strong>ArticuTable-100</strong>, a curated collection of 100 simulation-ready tabletop scenes. Extensive evaluation, including a user study, demonstrates strong performance across visual fidelity, scene consistency, articulation quality, physical plausibility, and simulation readiness.</p>
+    </section>
+
+    <section class="wide section" id="videos">
+      <h2>Scenes in Motion</h2>
+      <p class="section-lead">Switch between six additional simulation-ready scenes without opening a wall of video players.</p>
+      <div class="video-gallery">
+        <video id="scene-video" controls playsinline preload="none" poster="assets/videos/scene-01.webp" aria-label="Simulation-ready tabletop scene video"><source src="assets/videos/scene-01.mp4" type="video/mp4">Your browser does not support embedded video.</video>
+        <div class="video-picker" role="group" aria-label="Select a scene video">
+          <button type="button" data-scene="01" aria-pressed="true"><img src="assets/videos/scene-01.webp" alt=""><span>Scene 01</span></button>
+          <button type="button" data-scene="02" aria-pressed="false"><img src="assets/videos/scene-02.webp" alt=""><span>Scene 02</span></button>
+          <button type="button" data-scene="03" aria-pressed="false"><img src="assets/videos/scene-03.webp" alt=""><span>Scene 03</span></button>
+          <button type="button" data-scene="05" aria-pressed="false"><img src="assets/videos/scene-05.webp" alt=""><span>Scene 05</span></button>
+          <button type="button" data-scene="06" aria-pressed="false"><img src="assets/videos/scene-06.webp" alt=""><span>Scene 06</span></button>
+          <button type="button" data-scene="07" aria-pressed="false"><img src="assets/videos/scene-07.webp" alt=""><span>Scene 07</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="wide section" id="method">
+      <h2>Method</h2>
+      <p class="section-lead">A single-image pipeline for reconstructing articulated assets and registering them in a consistent 3D scene.</p>
+      <figure class="figure"><img src="assets/method.png?v=20261006" width="1650" height="850" alt="ArticuTable pipeline: asset reconstruction, GRAM articulation modeling, PSGSR scene registration, and simulation-ready output"><figcaption><strong>Figure 2.</strong> Overview of the ArticuTable framework.</figcaption></figure>
+      <div class="method-details"><div><span class="method-tag">01 · ARTICULATION</span><h3>Generation-Robust Articulation Modeling</h3><p>GRAM turns imperfect proxy meshes into executable assets by recovering joint structure, parameters, and motion ranges.</p></div><div><span class="method-tag">02 · REGISTRATION</span><h3>Progressive Scene Registration</h3><p>PSGSR aligns object position, orientation, and scale through metric, planar, and input-view constraints.</p></div></div>
+    </section>
+
+    <section class="wide section" id="results">
+      <h2>Reconstruction Results</h2>
+      <p class="section-lead">Comparisons on generated and real-world tabletop images.</p>
+      <figure class="figure"><img src="assets/teaser.png?v=20261006" width="1650" height="535" alt="One RGB tabletop image reconstructed as an articulated scene under multiple joint configurations"><figcaption><strong>Figure 1.</strong> Single-image reconstruction of articulated tabletop scenes under different joint configurations.</figcaption></figure>
+      <figure class="figure"><img src="assets/comparison.png?v=20261006" width="1650" height="930" alt="Qualitative comparisons between input images, baseline 3D reconstruction methods, and ArticuTable"><figcaption><strong>Figure 3.</strong> Qualitative comparison with existing single-image tabletop reconstruction methods.</figcaption></figure>
+      <h3 class="subheading">Interactive and simulation-ready</h3>
+      <figure class="figure"><img src="assets/interaction.png?v=20261006" width="1650" height="700" alt="In-scene editing and physics validation with object removal, insertion, rearrangement, dragging, and articulated opening"><figcaption><strong>Figure 6.</strong> In-scene editing and physics validation, including articulated opening.</figcaption></figure>
+    </section>
+
+    <section class="wide section evaluation" id="evaluation">
+      <h2>Quantitative Evaluation</h2>
+      <p class="section-lead">Scene reconstruction, articulated assets, component ablations, and human preference. Values below reproduce Tables 1–5 of the paper.</p>
+      <div class="result-block">
+        <h3>Scene-level reconstruction</h3>
+        <p>ArticuTable leads on input-view consistency, perceptual assessment, and physical validity.</p>
+        <div class="table-scroll"><table><caption>Table 1 · Scene-level results</caption><thead><tr><th scope="col">Method</th><th scope="col">LPIPS ↓</th><th scope="col">DINOv2 ↑</th><th scope="col">CLIP ↑</th><th scope="col">VF ↑</th><th scope="col">IA ↑</th><th scope="col">PP ↑</th><th scope="col">Avg. ↑</th><th scope="col">OR ↓</th><th scope="col">ColO ↓</th><th scope="col">ColS ↓</th></tr></thead><tbody>
+          <tr><th scope="row">ACDC</th><td>0.4447</td><td>0.5135</td><td>0.8058</td><td>3.927</td><td>1.920</td><td>3.880</td><td>3.242</td><td>4.298</td><td>1.5302%</td><td>32.00%</td></tr>
+          <tr><th scope="row">Gen3DSR</th><td>0.2716</td><td>0.5704</td><td>0.8386</td><td>2.220</td><td>4.680</td><td>4.013</td><td>3.638</td><td>3.349</td><td>11.3322%</td><td>66.67%</td></tr>
+          <tr><th scope="row">MIDI</th><td>0.4302</td><td>0.6469</td><td>0.8668</td><td>2.787</td><td>2.933</td><td>2.360</td><td>2.693</td><td>4.142</td><td>37.9430%</td><td>99.33%</td></tr>
+          <tr><th scope="row">TabletopGen</th><td>0.3935</td><td>0.7788</td><td>0.8908</td><td>5.380</td><td>4.860</td><td>5.893</td><td>5.378</td><td>2.162</td><td>1.4488%</td><td>16.00%</td></tr>
+          <tr class="ours"><th scope="row">ArticuTable</th><td>0.2398</td><td>0.8991</td><td>0.9265</td><td>5.867</td><td>6.253</td><td>6.600</td><td>6.240</td><td>1.049</td><td>0.3819%</td><td>10.67%</td></tr>
+        </tbody></table></div>
+        <p class="table-note">VF: visual fidelity; IA: input alignment; PP: physical plausibility; OR: overall rank. ColO and ColS report collision rates.</p>
+      </div>
+      <div class="result-block">
+        <h3>Articulated asset quality</h3>
+        <p>Lightwheel benchmark results, grouped by image- or mesh-conditioned input.</p>
+        <div class="table-scroll"><table><caption>Table 2 · Lightwheel articulation benchmark</caption><thead><tr><th scope="col">Method</th><th scope="col">Input</th><th scope="col">Training-free</th><th scope="col">Prec. ↑</th><th scope="col">Rec. ↑</th><th scope="col">Rest mIoU ↑</th><th scope="col">Art. gIoU ↑</th><th scope="col">OC ↓</th><th scope="col">AE ↓</th><th scope="col">LE ↓</th></tr></thead><tbody>
+          <tr><th scope="row">SINGAPO</th><td>Image</td><td>–</td><td>37.60</td><td>25.40</td><td>0.182</td><td>−0.263</td><td>0.030</td><td>30.30°</td><td>0.077</td></tr>
+          <tr><th scope="row">PAct</th><td>Image</td><td>–</td><td>24.60</td><td>16.80</td><td>0.092</td><td>−0.434</td><td>0.056</td><td>42.90°</td><td>0.188</td></tr>
+          <tr><th scope="row">PhysX-Anything</th><td>Image</td><td>–</td><td>20.30</td><td>19.20</td><td>0.093</td><td>−0.459</td><td>0.064</td><td>38.80°</td><td>0.123</td></tr>
+          <tr><th scope="row">URDF-Anything+</th><td>Image</td><td>–</td><td>70.70</td><td>23.90</td><td>0.260</td><td>−0.138</td><td>0.033</td><td>50.40°</td><td>0.128</td></tr>
+          <tr><th scope="row">Articulate AnyMesh</th><td>Mesh</td><td>✓</td><td>89.20</td><td>42.50</td><td>0.452</td><td>0.158</td><td>0.010</td><td>21.70°</td><td>0.043</td></tr>
+          <tr><th scope="row">URDF-Anything+</th><td>Mesh</td><td>–</td><td>77.50</td><td>27.40</td><td>0.267</td><td>−0.110</td><td>0.026</td><td>49.90°</td><td>0.111</td></tr>
+          <tr><th scope="row">Particulate</th><td>Mesh</td><td>–</td><td>89.90</td><td>51.50</td><td>0.576</td><td>0.305</td><td>0.009</td><td>20.90°</td><td>0.040</td></tr>
+          <tr class="ours"><th scope="row">GRAM</th><td>Mesh</td><td>✓</td><td>91.15</td><td>46.54</td><td>0.564</td><td>0.283</td><td>0.014</td><td>17.26°</td><td>0.034</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="result-pair">
+        <div class="result-block"><h3>GRAM ablation</h3><div class="table-scroll"><table><caption>Table 3 · Component ablation</caption><thead><tr><th scope="col">Component</th><th scope="col">Metric</th><th scope="col">Enabled</th><th scope="col">Disabled</th><th scope="col">Reduction</th></tr></thead><tbody>
+          <tr><th scope="row" rowspan="2">MLLM-guided joint fitting</th><td>AE ↓</td><td>17.17°</td><td>40.06°</td><td>57.1%</td></tr><tr><td>LE ↓</td><td>0.0417</td><td>0.0527</td><td>20.9%</td></tr>
+          <tr><th scope="row" rowspan="2">Semantic state reasoning</th><td>Art. PC ↓</td><td>0.2502</td><td>0.2605</td><td>3.9%</td></tr><tr><td>OC ↓</td><td>0.0152</td><td>0.0176</td><td>13.6%</td></tr>
+        </tbody></table></div></div>
+        <div class="result-block"><h3>PSGSR ablation</h3><div class="table-scroll"><table><caption>Table 4 · Registration stages</caption><thead><tr><th scope="col">Variant</th><th scope="col">Top</th><th scope="col">Input</th><th scope="col">SASPS</th><th scope="col">LPIPS ↓</th><th scope="col">DINOv2 ↑</th><th scope="col">CLIP ↑</th></tr></thead><tbody>
+          <tr><th scope="row">Point-cloud only</th><td>–</td><td>–</td><td>–</td><td>0.3439</td><td>0.8102</td><td>0.9077</td></tr>
+          <tr><th scope="row">w/o Top-view</th><td>×</td><td>✓</td><td>–</td><td>0.2564</td><td>0.8702</td><td>0.9210</td></tr>
+          <tr><th scope="row">Top-view only</th><td>✓</td><td>×</td><td>×</td><td>0.3235</td><td>0.8586</td><td>0.9156</td></tr>
+          <tr><th scope="row">w/o SASPS</th><td>✓</td><td>✓</td><td>×</td><td>0.2543</td><td>0.8762</td><td>0.9205</td></tr>
+          <tr class="ours"><th scope="row">Full model</th><td>✓</td><td>✓</td><td>✓</td><td>0.2398</td><td>0.8991</td><td>0.9265</td></tr>
+        </tbody></table></div></div>
+      </div>
+      <div class="result-block"><h3>User study</h3><p>59 participants; each method received 590 valid rankings.</p><div class="table-scroll"><table><caption>Table 5 · Human preference rankings</caption><thead><tr><th scope="col">Metric</th><th scope="col">ACDC</th><th scope="col">Gen3DSR</th><th scope="col">MIDI</th><th scope="col">TabletopGen</th><th scope="col">ArticuTable</th></tr></thead><tbody>
+        <tr><th scope="row">Mean rank ↓</th><td>4.08</td><td>3.75</td><td>3.75</td><td>2.24</td><td class="best">1.17</td></tr>
+        <tr><th scope="row">Median rank ↓</th><td>4</td><td>4</td><td>4</td><td>2</td><td class="best">1</td></tr>
+        <tr><th scope="row">First-place rate ↑</th><td>0.17%</td><td>1.02%</td><td>1.02%</td><td>12.20%</td><td class="best">85.59%</td></tr>
+        <tr><th scope="row">Top-2 rate ↑</th><td>6.61%</td><td>11.86%</td><td>8.81%</td><td>74.58%</td><td class="best">98.14%</td></tr>
+      </tbody></table></div></div>
+    </section>
+
+    <section class="content section citation" id="citation">
+      <h2>Citation</h2>
+      <pre><code>@misc{lv2026articutablegeneratinginstancelevelinteractive,
+  title={ArticuTable: Generating Instance-Level Interactive Rigid-Articulated 3D Tabletop Scenes from a Single Image},
+  author={Kai Lv and Yibo Yin and Lijun Guo and Heng Fan and Kaihao Zhang and Xingping Dong},
+  year={2026},
+  eprint={2610.05249},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2610.05249}
+}</code></pre>
+    </section>
+  </main>
+  <footer><p>ArticuTable · 2026 &nbsp; | &nbsp; <a href="https://nerfies.github.io/" target="_blank" rel="noopener noreferrer">Project-page inspiration: Nerfies</a></p></footer>
+</body>
+</html>
