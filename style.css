@@ -60,11 +60,12 @@ nav a:hover{color:var(--accent)}
 .paper-media.is-playing canvas{visibility:visible}
 .paper-media.is-playing::after{opacity:0}
 .paper-copy{padding:0}
-.paper-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
+.paper-links{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-top:4px;color:var(--accent);font-size:14px;font-weight:700}
 .paper-links>a,.paper-link-pending{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:5px 8px;border:1px solid #e3ddec;border-radius:8px;background:#faf8fe;white-space:nowrap;line-height:1.2}
 .paper-links>a:hover{border-color:#b7a9dc;background:var(--soft);color:#554391}
 .paper-links svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .paper-links img{width:16px;height:16px;flex:none}
+.paper-links a:last-child img{width:20px;height:20px;border-radius:3px}
 .paper-link-pending{color:#8a8595;background:#f8f7fa}
 .paper-link-pending small{font-size:11px;font-weight:500;color:#9a95a5}
 .paper-copy h3{font:700 28px/1.15 "Crimson Text",Georgia,serif;letter-spacing:-.01em;margin:0 0 8px}

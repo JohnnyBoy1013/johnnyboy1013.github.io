@@ -43,3 +43,16 @@ media.addEventListener('keydown', event => {
   }
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
+
+const visitorDetails = document.querySelector('.visitors-section details');
+visitorDetails.addEventListener('toggle', () => {
+  const widget = visitorDetails.querySelector('script[data-src]');
+  if (visitorDetails.open && widget) {
+    const script = document.createElement('script');
+    for (const [key, value] of Object.entries(widget.dataset)) {
+      if (key !== 'src') script.dataset[key] = value;
+    }
+    script.src = widget.dataset.src;
+    widget.replaceWith(script);
+  }
+});
