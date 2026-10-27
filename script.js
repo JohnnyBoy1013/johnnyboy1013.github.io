@@ -45,9 +45,9 @@ media.addEventListener('keydown', event => {
 document.querySelector('#year').textContent = new Date().getFullYear();
 
 const visitorDetails = document.querySelector('.visitors-section details');
-visitorDetails.addEventListener('toggle', () => {
+function loadVisitorMap() {
   const widget = visitorDetails.querySelector('script[data-src]');
-  if (visitorDetails.open && widget) {
+  if (widget) {
     const script = document.createElement('script');
     for (const [key, value] of Object.entries(widget.dataset)) {
       if (key !== 'src') script.dataset[key] = value;
@@ -55,4 +55,22 @@ visitorDetails.addEventListener('toggle', () => {
     script.src = widget.dataset.src;
     widget.replaceWith(script);
   }
+}
+
+visitorDetails.addEventListener('toggle', () => {
+  if (visitorDetails.open) loadVisitorMap();
 });
+
+function preloadVisitorMap() {
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(loadVisitorMap, { timeout: 3000 });
+  } else {
+    window.setTimeout(loadVisitorMap, 1000);
+  }
+}
+
+if (document.readyState === 'complete') {
+  preloadVisitorMap();
+} else {
+  window.addEventListener('load', preloadVisitorMap, { once: true });
+}
